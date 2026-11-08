@@ -13,48 +13,96 @@
   /* ------------------------------ data ------------------------------ */
 
   const EVENTS = {
-    worlds: {
-      id: "worlds",
-      title: "WORLDS 2026 - SEMIS 2",
-      dateLong: "Sunday, November 8, 2026",
-      dateShort: "Sun, Nov 8",
+    semis1: {
+      id: "semis1",
+      title: "WORLDS 2026 - SEMIS 1",
+      dateLong: "Saturday, November 7, 2026",
+      dateShort: "Sat, Nov 7",
+      dateCompact: "SAT • NOV 7, 2026 • 4:00 PM",
       time: "4:00 PM",
       venue: "Credit Union of Texas Event Center",
       city: "Allen, TX",
       image: "assets/img/lol.jpg",
-      badge: "Tonight",
-      accent: "#4c8dff",
+      badge: "Upcoming",
+      accent: "#1f6fff",
     },
-    blippi: {
-      id: "blippi",
+    semis2: {
+      id: "semis2",
+      title: "WORLDS 2026 - SEMIS 2",
+      dateLong: "Sunday, November 8, 2026",
+      dateShort: "Sun, Nov 8",
+      dateCompact: "SUN • NOV 8, 2026 • 4:00 PM",
+      time: "4:00 PM",
+      venue: "Credit Union of Texas Event Center",
+      city: "Allen, TX",
+      image: "assets/img/lol.jpg",
+      badge: "Upcoming",
+      accent: "#1f6fff",
+    },
+    worlds2025: {
+      id: "worlds2025",
+      title: "WORLDS 2025 - FINAL",
+      dateLong: "Saturday, November 8, 2025",
+      dateShort: "Sat, Nov 8",
+      dateCompact: "SAT • NOV 8, 2025 • 2:00 PM",
+      time: "2:00 PM",
+      venue: "Barclays Center",
+      city: "Brooklyn, NY",
+      image: "assets/img/lol.jpg",
+      badge: "Past",
+      accent: "#5f6670",
+    },
+    blippi2025: {
+      id: "blippi2025",
       title: "BLIPPI LIVE!",
-      dateLong: "Sunday, January 24, 2027",
-      dateShort: "Sun, Jan 24",
+      dateLong: "Saturday, January 25, 2025",
+      dateShort: "Sat, Jan 25",
+      dateCompact: "SAT • JAN 25, 2025 • 2:00 PM",
       time: "2:00 PM",
       venue: "Comerica Center",
       city: "Frisco, TX",
       image: "assets/img/blippi.jpg",
-      badge: "Upcoming",
+      badge: "Past",
       accent: "#f59e0b",
     },
   };
 
   const TICKETS = [
     {
+      id: "TM-8472-2607",
+      event: "semis1",
+      section: "114",
+      row: "F",
+      seats: "7 – 8",
+      order: "TM-8472-2607",
+      future: true,
+    },
+    {
       id: "TM-8472-2608",
-      event: "worlds",
+      event: "semis2",
       section: "114",
       row: "F",
       seats: "7 – 8",
       order: "TM-8472-2608",
+      future: true,
     },
     {
-      id: "TM-1934-0127",
-      event: "blippi",
+      id: "TM-2025-1108",
+      event: "worlds2025",
+      section: "112",
+      row: "C",
+      seats: "11 – 12",
+      order: "TM-2025-1108",
+      future: false,
+    },
+    {
+      id: "TM-2025-0125",
+      event: "blippi2025",
       section: "102",
       row: "C",
       seats: "4 – 5",
-      order: "TM-1934-0127",
+      order: "TM-2025-0125",
+      future: false,
     },
   ];
 
@@ -95,6 +143,8 @@
     bookmark: '<path d="M6.6 4.3h10.8v15.2l-5.4-3.7-5.4 3.7z"/>',
     heart: '<path d="M20.7 8.7c0 4.6-8.7 10.2-8.7 10.2S3.3 13.3 3.3 8.7a4.7 4.7 0 0 1 8.8-2.5 4.7 4.7 0 0 1 8.6 2.5Z"/>',
     ticket: '<path d="M4.2 8.7V6.8c0-1.1.9-2 2-2h11.6c1.1 0 2 .9 2 2v1.9a3.4 3.4 0 0 0 0 6.6v1.9c0 1.1-.9 2-2 2H6.2c-1.1 0-2-.9-2-2v-1.9a3.4 3.4 0 0 0 0-6.6Z"/><path d="M8 9.2v5.6M12.4 9.4h4.2"/>',
+    ticketFilled: '<path d="M4.5 6.6c0-1 .8-1.8 1.8-1.8h11.4c1 0 1.8.8 1.8 1.8v2.1a3.4 3.4 0 0 0 0 6.6v2.1c0 1-.8 1.8-1.8 1.8H6.3c-1 0-1.8-.8-1.8-1.8v-2.1a3.4 3.4 0 0 0 0-6.6Z" fill="currentColor" stroke="none"/><path d="M8.3 9.2v5.6M12.2 9.4h4.2M12.2 12.5h3.2" stroke="#0b0b0b" stroke-width="1.6"/>',
+    calendarPlus: '<rect x="3.5" y="5" width="17" height="15.5" rx="2.3"/><path d="M7.5 3v4M16.5 3v4M3.5 9.5h17M17.5 13v6M14.5 16h6"/>',
     user: '<circle cx="12" cy="8" r="3.4"/><path d="M5.4 20c.7-3.5 3-5.4 6.6-5.4s5.9 1.9 6.6 5.4"/>',
     qr: '<rect x="3.5" y="3.5" width="6" height="6" rx="1"/><rect x="14.5" y="3.5" width="6" height="6" rx="1"/><rect x="3.5" y="14.5" width="6" height="6" rx="1"/><path d="M14.5 14.5h2.8v2.8h-2.8zM20.5 14.5v6M14.5 20.5h6"/>',
     install: '<rect x="6" y="2.8" width="12" height="18.4" rx="2.5"/><path d="M10.5 5.5h3M12 9v6m0 0 2.4-2.4M12 15l-2.4-2.4"/>',
@@ -251,9 +301,12 @@
     { id: "account", label: "Account", href: "#/account" },
   ];
 
-  function tabIcon(tabId) {
+  function tabIcon(tabId, isActive = false) {
     if (tabId === "home") {
       return '<span class="tmark" aria-hidden="true"></span>';
+    }
+    if (tabId === "tickets" && isActive) {
+      return icon("ticketFilled", "tab-svg");
     }
     const iconNames = { watchlist: "bookmark", tickets: "ticket", account: "user" };
     return icon(iconNames[tabId] || tabId, "tab-svg");
@@ -264,7 +317,7 @@
     tabbar.innerHTML = TABS.map((tab) => {
       const isActive = tab.id === active;
       return `<a class="tab${isActive ? " active" : ""}${ghost ? " ghosted" : ""}" href="${tab.href}" data-tab="${tab.id}" aria-label="${tab.label}"${isActive ? ' aria-current="page"' : ""}>
-        <span class="tab-icon">${tabIcon(tab.id)}</span>
+        <span class="tab-icon">${tabIcon(tab.id, isActive)}</span>
         <span class="tab-label">${tab.label}</span>
       </a>`;
     }).join("");
@@ -295,71 +348,78 @@
     window.scrollTo(0, 0);
   }
 
+  function titleMarkup(title) {
+    return escapeHtml(title).replace(" - ", " -<br>");
+  }
+
+  function usFlagSvg() {
+    let stripes = "";
+    const stripeHeight = 24 / 13;
+    for (let index = 0; index < 13; index += 1) {
+      if (index % 2 === 0) {
+        stripes += `<rect x="0" y="${(index * stripeHeight).toFixed(2)}" width="24" height="${stripeHeight.toFixed(2)}" fill="#b22234"/>`;
+      }
+    }
+    let stars = "";
+    for (let row = 0; row < 3; row += 1) {
+      for (let column = 0; column < 4; column += 1) {
+        stars += `<circle cx="${2.4 + column * 2.1}" cy="${2.2 + row * 2.25}" r=".42" fill="#fff"/>`;
+      }
+    }
+    return `<svg viewBox="0 0 24 24" aria-hidden="true"><defs><clipPath id="us-flag-clip"><circle cx="12" cy="12" r="12"/></clipPath></defs><g clip-path="url(#us-flag-clip)"><rect width="24" height="24" fill="#fff"/>${stripes}<rect width="10.2" height="10" fill="#1f3c78"/>${stars}</g></svg>`;
+  }
+
   function renderTickets() {
     renderTabbar("tickets", false);
     const past = state.ticketsView === "past";
-    const ticketMarkup = TICKETS.map((ticket) => {
+    const upcomingTickets = TICKETS.filter((ticket) => ticket.future);
+    const pastTickets = TICKETS.filter((ticket) => !ticket.future);
+    const tickets = past ? pastTickets : upcomingTickets;
+
+    const ticketMarkup = tickets.map((ticket) => {
       const event = EVENTS[ticket.event];
-      return `<article class="ticket-card" style="--event-accent:${event.accent}">
-        <div class="ticket-art">
+      return `<article class="event-ticket">
+        <div class="event-ticket-hero">
           <img src="${event.image}" alt="${escapeHtml(event.title)}" loading="lazy">
-          <span class="ticket-status"><span class="dot"></span>${event.badge}</span>
-          <div class="ticket-art-copy">
-            <h2>${escapeHtml(event.title)}</h2>
-            <p>${event.dateShort} · ${event.time} · ${escapeHtml(event.city)}</p>
-          </div>
+          <span class="event-ticket-date">${event.dateCompact}</span>
         </div>
-        <div class="ticket-body">
-          <div class="ticket-body-top">
-            <div>
-              <p class="order-label">Order ${escapeHtml(ticket.order)}</p>
-              <p class="order-id">Mobile entry · 2 tickets</p>
-            </div>
-            <button class="qr-mini" type="button" data-view-ticket="${ticket.id}" aria-label="Open QR code for ${escapeHtml(event.title)}">
-              ${qrSvg(ticket.id)}
-            </button>
-          </div>
-          <dl class="ticket-grid">
-            <div><dt>Section</dt><dd>${ticket.section}</dd></div>
-            <div><dt>Row</dt><dd>${ticket.row}</dd></div>
-            <div><dt>Seat</dt><dd>${ticket.seats}</dd></div>
-          </dl>
-          <div class="perforation"></div>
-          <div class="ticket-actions">
-            <button class="btn btn-primary" type="button" data-view-ticket="${ticket.id}">${icon("qr")} View ticket</button>
-            <button class="btn btn-secondary" type="button" data-transfer="${ticket.id}">Transfer</button>
-          </div>
+        <div class="event-ticket-info">
+          <h2>${titleMarkup(event.title)}</h2>
+          <span class="event-ticket-rule" aria-hidden="true"></span>
+          <p class="event-ticket-venue">${escapeHtml(event.venue)} - ${escapeHtml(event.city)}</p>
         </div>
+        <button class="view-tickets" type="button" data-view-ticket="${ticket.id}">
+          ${past ? "View Order" : "View Tickets"} ${icon("external")}
+        </button>
       </article>`;
     }).join("");
 
     view.className = "view";
-    view.innerHTML = `<section class="page">
-      <header class="page-head">
-        <p class="eyebrow">Your events</p>
-        <h1 class="page-title">My Tickets</h1>
-        <p class="page-subtitle">Everything you need for showtime</p>
+    view.innerHTML = `<section class="ticket-page">
+      <header class="ticket-page-head">
+        <div class="ticket-page-title-row">
+          <span class="ticket-head-spacer" aria-hidden="true"></span>
+          <h1 class="ticket-page-title">My Tickets <span class="flag-badge" role="img" aria-label="United States">${usFlagSvg()}</span></h1>
+          <button class="ticket-help" type="button" data-ticket-help>Help</button>
+        </div>
+        <div class="ticket-tabs" role="tablist" aria-label="Ticket period">
+          <button class="ticket-tab${past ? "" : " active"}" type="button" role="tab" aria-selected="${!past}" data-ticket-view="upcoming">
+            Upcoming (${upcomingTickets.length})
+          </button>
+          <button class="ticket-tab${past ? " active" : ""}" type="button" role="tab" aria-selected="${past}" data-ticket-view="past">
+            Past (${pastTickets.length})
+          </button>
+        </div>
       </header>
 
-      <div class="segmented" role="tablist" aria-label="Ticket period">
-        <button class="seg${past ? "" : " active"}" type="button" role="tab" aria-selected="${!past}" data-ticket-view="upcoming">
-          ${icon("ticket")} Upcoming
-        </button>
-        <button class="seg${past ? " active" : ""}" type="button" role="tab" aria-selected="${past}" data-ticket-view="past">
-          ${icon("calendar")} Past
-        </button>
+      <div class="ticket-page-body">
+        <div class="ticket-list-heading">
+          <h2>${past ? "Past Events" : "Enjoy Your Event"}</h2>
+          <button class="calendar-add" type="button" data-ticket-calendar aria-label="Add event to calendar">${icon("calendarPlus")}</button>
+        </div>
+        <div class="event-ticket-list">${ticketMarkup}</div>
+        <p class="ticket-page-note">${icon("lock")} Your tickets are protected. Screenshots cannot be used for entry.</p>
       </div>
-
-      ${past ? `<div class="empty-state">
-        <span class="empty-icon">${icon("calendar")}</span>
-        <h3>No past events yet</h3>
-        <p>Once an event wraps up, your ticket history will live here.</p>
-      </div>` : `<div class="section-row">
-        <h2 class="section-title">Upcoming events</h2>
-        <span class="section-meta">${TICKETS.length} tickets</span>
-      </div>
-      <div class="ticket-stack">${ticketMarkup}</div>
-      <p class="ticket-hint">${icon("lock")} Your tickets are protected. Screenshots cannot be used for entry.</p>`}
     </section>`;
 
     view.scrollTop = 0;
@@ -381,8 +441,21 @@
       button.addEventListener("click", () => openTicket(button.dataset.viewTicket));
     });
 
-    view.querySelectorAll("[data-transfer]").forEach((button) => {
-      button.addEventListener("click", () => showToast("Ticket transfer is unavailable in this demo", "transfer"));
+    view.querySelector("[data-ticket-help]")?.addEventListener("click", () => {
+      openSheet({
+        title: "Ticket help",
+        subtitle: "Everything you need for entry",
+        body: `<div class="install-steps">
+          <div class="install-step"><span class="step-number">${icon("qr")}</span><p><strong>Have your QR code ready</strong><br>Open View Tickets and turn up your screen brightness at the gate.</p></div>
+          <div class="install-step"><span class="step-number">${icon("transfer")}</span><p><strong>Need to send tickets?</strong><br>Use the transfer option in your Ticketmaster account before the event.</p></div>
+          <div class="install-step"><span class="step-number">${icon("help")}</span><p><strong>Still need help?</strong><br>support@ticketmaster.example · Available 24/7</p></div>
+        </div>
+        <p class="sheet-note">This is a front-end demo. The links above are illustrative.</p>`,
+      });
+    });
+
+    view.querySelector("[data-ticket-calendar]")?.addEventListener("click", () => {
+      showToast("Event added to your calendar", "calendar");
     });
   }
 
@@ -445,7 +518,7 @@
       </div>
 
       <div class="stats" aria-label="Account summary">
-        <div class="stat"><strong>${TICKETS.length}</strong><span>Tickets</span></div>
+        <div class="stat"><strong>${TICKETS.filter((ticket) => ticket.future).length}</strong><span>Tickets</span></div>
         <div class="stat"><strong>2</strong><span>Favorites</span></div>
         <div class="stat"><strong>12</strong><span>Events</span></div>
       </div>
