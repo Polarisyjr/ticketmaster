@@ -8,7 +8,7 @@
 | --- | --- |
 | Home | 使用你提供的首页截图直接铺满屏幕，底部四个 tab 全部可点击 |
 | Watchlist | 使用你提供的 Watchlist 截图直接铺满屏幕，底部四个 tab 全部可点击 |
-| My Tickets | 按最新参考图实现的票卡页面，可上下滚动；Upcoming 里包含 SEMIS 1 / SEMIS 2 两张同款票卡，含 QR 票码、Past 切换、Help 与日历按钮 |
+| My Tickets | 按参考图实现的票卡页面，可上下滚动；Upcoming 里包含 SEMIS 1 / SEMIS 2 两张同款票卡，含 Upcoming / Past、Help 与日历按钮 |
 | Account | 原生 HTML/CSS 实现的账户页，含会员卡、安装 PWA、APK 下载、账户菜单 |
 
 主页和 Watchlist 的截图已经去掉 iOS 状态栏，并把底部导航保留在画面中。正常比例的手机上直接点击图中导航即可跳转；在较矮的屏幕（例如 375×667）会自动切换成可点击的实时导航栏，避免截图顶部被裁切。
@@ -28,6 +28,7 @@ python3 -m http.server 4173 --bind 0.0.0.0
 - 在网页的 **Account → Install → Download Android APK** 也可以下载。
 - 这是 debug 签名的演示包；安装时需允许“安装未知来源应用”。
 - My Tickets 页面可向下滚动查看第二张 SEMIS 2 票卡。
+- 点击任一张票卡的 **View Tickets** 进入可滚动的票务详情页：顶部活动图、订单、两张 Verified Resale Ticket、地图、Get Directions，以及固定底部 Upgrade / Transfer / Sell 操作条。
 
 APK 内嵌了同一套页面和图片，首次打开无需联网。
 

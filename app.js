@@ -9,6 +9,7 @@
   const tabbar = document.getElementById("tabbar");
   const toastEl = document.getElementById("toast");
   const modalRoot = document.getElementById("modalRoot");
+  const floatingLayer = document.getElementById("floatingLayer");
 
   /* ------------------------------ data ------------------------------ */
 
@@ -19,6 +20,8 @@
       dateLong: "Saturday, November 7, 2026",
       dateShort: "Sat, Nov 7",
       dateCompact: "SAT • NOV 7, 2026 • 4:00 PM",
+      dateDetail: "SAT • NOV 7, 2026 • 16:00",
+      navTitle: "Worlds 2026 - Semis 1",
       time: "4:00 PM",
       venue: "Credit Union of Texas Event Center",
       city: "Allen, TX",
@@ -32,6 +35,8 @@
       dateLong: "Sunday, November 8, 2026",
       dateShort: "Sun, Nov 8",
       dateCompact: "SUN • NOV 8, 2026 • 4:00 PM",
+      dateDetail: "SUN • NOV 8, 2026 • 16:00",
+      navTitle: "Worlds 2026 - Semis 2",
       time: "4:00 PM",
       venue: "Credit Union of Texas Event Center",
       city: "Allen, TX",
@@ -45,6 +50,8 @@
       dateLong: "Saturday, November 8, 2025",
       dateShort: "Sat, Nov 8",
       dateCompact: "SAT • NOV 8, 2025 • 2:00 PM",
+      dateDetail: "SAT • NOV 8, 2025 • 14:00",
+      navTitle: "Worlds 2025 - Final",
       time: "2:00 PM",
       venue: "Barclays Center",
       city: "Brooklyn, NY",
@@ -58,6 +65,8 @@
       dateLong: "Saturday, January 25, 2025",
       dateShort: "Sat, Jan 25",
       dateCompact: "SAT • JAN 25, 2025 • 2:00 PM",
+      dateDetail: "SAT • JAN 25, 2025 • 14:00",
+      navTitle: "Blippi Live!",
       time: "2:00 PM",
       venue: "Comerica Center",
       city: "Frisco, TX",
@@ -71,19 +80,21 @@
     {
       id: "TM-8472-2607",
       event: "semis1",
-      section: "114",
-      row: "F",
-      seats: "7 – 8",
-      order: "TM-8472-2607",
+      section: "111",
+      row: "B",
+      seatNumbers: ["1", "2"],
+      quantity: 2,
+      order: "30000743742399429",
       future: true,
     },
     {
       id: "TM-8472-2608",
       event: "semis2",
-      section: "114",
-      row: "F",
-      seats: "7 – 8",
-      order: "TM-8472-2608",
+      section: "111",
+      row: "B",
+      seatNumbers: ["3", "4"],
+      quantity: 2,
+      order: "30000743742399430",
       future: true,
     },
     {
@@ -91,8 +102,9 @@
       event: "worlds2025",
       section: "112",
       row: "C",
-      seats: "11 – 12",
-      order: "TM-2025-1108",
+      seatNumbers: ["11", "12"],
+      quantity: 2,
+      order: "30000732211877005",
       future: false,
     },
     {
@@ -100,8 +112,9 @@
       event: "blippi2025",
       section: "102",
       row: "C",
-      seats: "4 – 5",
-      order: "TM-2025-0125",
+      seatNumbers: ["4", "5"],
+      quantity: 2,
+      order: "30000711882291504",
       future: false,
     },
   ];
@@ -134,8 +147,11 @@
 
   const state = {
     ticketsView: "upcoming",
+    detailTab: "tickets",
     deferredInstallPrompt: null,
   };
+
+  let detailScrollHandler = null;
 
   /* ------------------------------ icons ------------------------------ */
 
@@ -152,6 +168,7 @@
     lock: '<rect x="5" y="10" width="14" height="10" rx="2.2"/><path d="M8.2 10V7.4a3.8 3.8 0 0 1 7.6 0V10"/><path d="M12 14v2.4"/>',
     calendar: '<rect x="3.5" y="5" width="17" height="15.5" rx="2.3"/><path d="M7.5 3v4M16.5 3v4M3.5 9.5h17"/>',
     chevron: '<path d="m9 5.5 6.4 6.5L9 18.5"/>',
+    back: '<path d="M19 12H5m0 0 6-6M5 12l6 6"/>',
     close: '<path d="m6 6 12 12M18 6 6 18"/>',
     check: '<path d="m5 12.5 4.4 4.4L19 7.2"/>',
     card: '<rect x="3" y="5.4" width="18" height="13.2" rx="2.5"/><path d="M3 9.8h18M6.5 15h3"/>',
@@ -162,6 +179,11 @@
     bell: '<path d="M18.2 9.8c0-3.4-1.7-5.5-4.5-6V2.8h-3.4v1c-2.8.5-4.5 2.6-4.5 6 0 5-2 6.3-2 6.3h16.4s-2-1.3-2-6.3Z"/><path d="M9.4 19.6a2.7 2.7 0 0 0 5.2 0"/>',
     external: '<path d="M14 4h6v6M20 4l-8.5 8.5"/><path d="M18 14v4.5a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 4 18.5v-11A1.5 1.5 0 0 1 5.5 6H10"/>',
     download: '<path d="M12 3v12m0 0 4.5-4.5M12 15l-4.5-4.5"/><path d="M4 20.5h16"/>',
+    barcode: '<path d="M4 8V5.5A1.5 1.5 0 0 1 5.5 4H8M16 4h2.5A1.5 1.5 0 0 1 20 5.5V8M20 16v2.5a1.5 1.5 0 0 1-1.5 1.5H16M8 20H5.5A1.5 1.5 0 0 1 4 18.5V16"/><path d="M8 8v8M11 8v8M14 8v8M17 8v8"/>',
+    dots: '<circle cx="12" cy="5.5" r="1.1" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.1" fill="currentColor" stroke="none"/><circle cx="12" cy="18.5" r="1.1" fill="currentColor" stroke="none"/>',
+    arrowUp: '<path d="M12 20V4m0 0-5.5 5.5M12 4l5.5 5.5"/>',
+    arrowUpRight: '<path d="M6 18 18 6M8 6h10v10"/>',
+    refresh: '<path d="M20 11a8 8 0 0 0-14.8-4.6L4 4v6h6M4 13a8 8 0 0 0 14.8 4.6L20 20v-6h-6"/>',
   };
 
   function icon(name, className = "") {
@@ -438,24 +460,282 @@
     });
 
     view.querySelectorAll("[data-view-ticket]").forEach((button) => {
-      button.addEventListener("click", () => openTicket(button.dataset.viewTicket));
-    });
-
-    view.querySelector("[data-ticket-help]")?.addEventListener("click", () => {
-      openSheet({
-        title: "Ticket help",
-        subtitle: "Everything you need for entry",
-        body: `<div class="install-steps">
-          <div class="install-step"><span class="step-number">${icon("qr")}</span><p><strong>Have your QR code ready</strong><br>Open View Tickets and turn up your screen brightness at the gate.</p></div>
-          <div class="install-step"><span class="step-number">${icon("transfer")}</span><p><strong>Need to send tickets?</strong><br>Use the transfer option in your Ticketmaster account before the event.</p></div>
-          <div class="install-step"><span class="step-number">${icon("help")}</span><p><strong>Still need help?</strong><br>support@ticketmaster.example · Available 24/7</p></div>
-        </div>
-        <p class="sheet-note">This is a front-end demo. The links above are illustrative.</p>`,
+      button.addEventListener("click", () => {
+        location.hash = `#/ticket/${encodeURIComponent(button.dataset.viewTicket)}`;
       });
     });
 
+    view.querySelector("[data-ticket-help]")?.addEventListener("click", openTicketHelp);
+
     view.querySelector("[data-ticket-calendar]")?.addEventListener("click", () => {
       showToast("Event added to your calendar", "calendar");
+    });
+  }
+
+  function openTicketHelp() {
+    openSheet({
+      title: "Ticket help",
+      subtitle: "Everything you need for entry",
+      body: `<div class="install-steps">
+        <div class="install-step"><span class="step-number">${icon("qr")}</span><p><strong>Have your QR code ready</strong><br>Open View Tickets and turn up your screen brightness at the gate.</p></div>
+        <div class="install-step"><span class="step-number">${icon("transfer")}</span><p><strong>Need to send tickets?</strong><br>Use the transfer option in your Ticketmaster account before the event.</p></div>
+        <div class="install-step"><span class="step-number">${icon("help")}</span><p><strong>Still need help?</strong><br>support@ticketmaster.example · Available 24/7</p></div>
+      </div>
+      <p class="sheet-note">This is a front-end demo. The links above are illustrative.</p>`,
+    });
+  }
+
+  function detailTabsMarkup(activeTab) {
+    return `<div class="detail-tabs" role="tablist" aria-label="Event details">
+      <button class="detail-tab${activeTab === "tickets" ? " active" : ""}" type="button" role="tab" aria-selected="${activeTab === "tickets"}" data-detail-tab="tickets">Tickets</button>
+      <button class="detail-tab${activeTab === "extras" ? " active" : ""}" type="button" role="tab" aria-selected="${activeTab === "extras"}" data-detail-tab="extras">Extras</button>
+    </div>`;
+  }
+
+  function detailPanelMarkup(ticket, activeTab) {
+    const event = EVENTS[ticket.event];
+
+    if (activeTab === "extras") {
+      return `<div class="detail-panel" id="detailPanel">
+        <div class="extras-heading">
+          <p class="eyebrow">Enhance your night</p>
+          <h2>Make it a night</h2>
+          <p>Add parking, merch and more to your event.</p>
+        </div>
+        <div class="extras-list">
+          <button class="extra-row" type="button" data-extra="Parking">
+            <span class="extra-icon">${icon("card")}</span>
+            <span><strong>Prepaid parking</strong><small>Reserve a spot near the venue · from $25</small></span>
+            ${icon("chevron", "extra-chevron")}
+          </button>
+          <button class="extra-row" type="button" data-extra="Merch">
+            <span class="extra-icon">${icon("spark")}</span>
+            <span><strong>Official event merch</strong><small>Skip the line with express pickup · from $35</small></span>
+            ${icon("chevron", "extra-chevron")}
+          </button>
+          <button class="extra-row" type="button" data-extra="VIP">
+            <span class="extra-icon">${icon("ticket")}</span>
+            <span><strong>VIP upgrades</strong><small>Check availability for premium seats</small></span>
+            ${icon("chevron", "extra-chevron")}
+          </button>
+        </div>
+        <p class="detail-note">Add-ons are subject to availability.</p>
+      </div>`;
+    }
+
+    const seatCards = ticket.seatNumbers.map((seat) => `<section class="verified-ticket">
+      <div class="verified-title">Verified Resale Ticket</div>
+      <div class="verified-grid">
+        <div><span>SECTION</span><strong>${escapeHtml(ticket.section)}</strong></div>
+        <div><span>ROW</span><strong>${escapeHtml(ticket.row)}</strong></div>
+        <div><span>SEAT</span><strong>${escapeHtml(seat)}</strong></div>
+      </div>
+    </section>`).join("");
+
+    const directions = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${event.venue}, ${event.city}`)}`;
+
+    return `<div class="detail-panel" id="detailPanel">
+      <div class="order-summary">
+        <div>
+          <h2>Order #${escapeHtml(ticket.order)}</h2>
+          <p>x${ticket.quantity} Tickets</p>
+        </div>
+        <button class="order-more" type="button" data-order-menu aria-label="Order options">${icon("dots")}</button>
+      </div>
+      <div class="verified-list">${seatCards}</div>
+      <div class="detail-map-card">
+        <img src="assets/img/venue-map.jpg" alt="Map showing the area around ${escapeHtml(event.venue)}">
+      </div>
+      <a class="detail-directions" href="${directions}" rel="noopener">Get Directions</a>
+      <p class="detail-note">${icon("lock")} Your tickets are protected. Screenshots cannot be used for entry.</p>
+    </div>`;
+  }
+
+  function floatingActionsMarkup() {
+    return `<div class="ticket-action-pill" role="group" aria-label="Ticket actions">
+      <button class="ticket-action" type="button" disabled>
+        <span class="ticket-action-icon">${icon("arrowUp")}</span>
+        <span>Upgrade</span>
+      </button>
+      <span class="action-divider" aria-hidden="true"></span>
+      <button class="ticket-action" type="button" data-detail-action="transfer">
+        <span class="ticket-action-icon">${icon("arrowUpRight")}</span>
+        <span>Transfer</span>
+      </button>
+      <span class="action-divider" aria-hidden="true"></span>
+      <button class="ticket-action" type="button" data-detail-action="sell">
+        <span class="ticket-action-icon">${icon("refresh")}</span>
+        <span>Sell</span>
+      </button>
+    </div>`;
+  }
+
+  function renderTicketDetail(ticketId) {
+    const ticket = TICKETS.find((item) => item.id === ticketId);
+    if (!ticket) {
+      location.replace("#/tickets");
+      return;
+    }
+
+    state.detailTab = "tickets";
+    const event = EVENTS[ticket.event];
+
+    tabbar.className = "tabbar hidden";
+    tabbar.innerHTML = "";
+    floatingLayer.innerHTML = floatingActionsMarkup();
+    view.className = "view";
+    view.innerHTML = `<section class="ticket-detail-page">
+      <header class="detail-topbar" data-detail-topbar>
+        <button class="detail-back" type="button" data-detail-back aria-label="Back to My Tickets">${icon("back")}</button>
+        <div class="detail-topbar-copy">
+          <strong>${escapeHtml(event.navTitle)}</strong>
+          <span>${escapeHtml(event.venue)}, ${escapeHtml(event.city)}</span>
+        </div>
+        <button class="detail-help" type="button" data-detail-help>Help</button>
+        <button class="detail-qr" type="button" data-detail-qr aria-label="Show ticket QR code">${icon("barcode")}</button>
+      </header>
+
+      <div class="detail-hero">
+        <img src="${event.image}" alt="${escapeHtml(event.title)}">
+      </div>
+
+      <section class="detail-event">
+        <span class="detail-date">${event.dateDetail}</span>
+        <h1>${escapeHtml(event.title)}</h1>
+        <div class="detail-venue-row">
+          <p>${escapeHtml(event.venue)}, ${escapeHtml(event.city)}</p>
+          <span class="ticket-count">${icon("ticket")} x${ticket.quantity}</span>
+        </div>
+        <button class="detail-view-tickets" type="button" data-detail-view>${icon("barcode")} View Tickets</button>
+      </section>
+
+      ${detailTabsMarkup("tickets")}
+      ${detailPanelMarkup(ticket, "tickets")}
+    </section>`;
+
+    view.scrollTop = 0;
+    document.title = `${event.navTitle} — Ticketmaster`;
+    bindTicketDetail(ticket);
+  }
+
+  function bindTicketDetail(ticket) {
+    const event = EVENTS[ticket.event];
+    const topbar = view.querySelector("[data-detail-topbar]");
+    const onScroll = () => {
+      if (!topbar) return;
+      topbar.classList.toggle("scrolled", view.scrollTop > 24);
+    };
+    detailScrollHandler = onScroll;
+    view.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+
+    view.querySelector("[data-detail-back]")?.addEventListener("click", () => {
+      location.hash = "#/tickets";
+    });
+
+    view.querySelector("[data-detail-help]")?.addEventListener("click", openTicketHelp);
+
+    view.querySelectorAll("[data-detail-view], [data-detail-qr]").forEach((button) => {
+      button.addEventListener("click", () => openTicket(ticket.id));
+    });
+
+    view.querySelectorAll("[data-detail-tab]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const tab = button.dataset.detailTab;
+        if (state.detailTab === tab) return;
+        state.detailTab = tab;
+        view.querySelectorAll("[data-detail-tab]").forEach((tabButton) => {
+          const active = tabButton.dataset.detailTab === tab;
+          tabButton.classList.toggle("active", active);
+          tabButton.setAttribute("aria-selected", String(active));
+        });
+        const scrollTop = view.scrollTop;
+        const panel = view.querySelector("#detailPanel");
+        if (panel) panel.outerHTML = detailPanelMarkup(ticket, tab);
+        bindDetailPanel(ticket);
+        view.scrollTop = scrollTop;
+      });
+    });
+
+    bindDetailPanel(ticket);
+
+    const transferButton = floatingLayer.querySelector('[data-detail-action="transfer"]');
+    const sellButton = floatingLayer.querySelector('[data-detail-action="sell"]');
+    transferButton?.addEventListener("click", () => openTransferSheet(ticket, event));
+    sellButton?.addEventListener("click", () => openSellSheet(ticket, event));
+  }
+
+  function bindDetailPanel(ticket) {
+    const event = EVENTS[ticket.event];
+    view.querySelector("[data-order-menu]")?.addEventListener("click", () => {
+      openSheet({
+        title: "Order options",
+        subtitle: `Order #${ticket.order}`,
+        body: `<div class="detail-sheet-actions">
+          <button class="sheet-action" type="button" data-order-action="view">${icon("barcode")} <span>View tickets</span></button>
+          <button class="sheet-action" type="button" data-order-action="transfer">${icon("transfer")} <span>Transfer tickets</span></button>
+          <button class="sheet-action" type="button" data-order-action="sell">${icon("refresh")} <span>Sell tickets</span></button>
+          <button class="sheet-action" type="button" data-order-action="help">${icon("help")} <span>Get help with this order</span></button>
+        </div>`,
+      });
+
+      modalRoot.querySelector('[data-order-action="view"]')?.addEventListener("click", () => {
+        closeSheet();
+        setTimeout(() => openTicket(ticket.id), 300);
+      });
+      modalRoot.querySelector('[data-order-action="transfer"]')?.addEventListener("click", () => {
+        closeSheet();
+        setTimeout(() => openTransferSheet(ticket, event), 300);
+      });
+      modalRoot.querySelector('[data-order-action="sell"]')?.addEventListener("click", () => {
+        closeSheet();
+        setTimeout(() => openSellSheet(ticket, event), 300);
+      });
+      modalRoot.querySelector('[data-order-action="help"]')?.addEventListener("click", () => {
+        closeSheet();
+        setTimeout(openTicketHelp, 300);
+      });
+    });
+
+    view.querySelectorAll("[data-extra]").forEach((button) => {
+      button.addEventListener("click", () => {
+        showToast(`${button.dataset.extra} add-ons are not available in this demo`, "spark");
+      });
+    });
+  }
+
+  function openTransferSheet(ticket, event) {
+    openSheet({
+      title: "Transfer tickets",
+      subtitle: `${event.navTitle} · x${ticket.quantity}`,
+      body: `<p class="sheet-copy">Send your tickets to a friend. They will get an email with a secure link to accept them.</p>
+        <label class="field-label" for="transfer-email">Recipient email</label>
+        <input class="text-field" id="transfer-email" type="email" inputmode="email" placeholder="friend@example.com" autocomplete="email">
+        <button class="btn btn-primary btn-wide" type="button" data-transfer-submit>${icon("transfer")} Send transfer link</button>
+        <p class="sheet-note">Transfers are disabled in this front-end demo.</p>`,
+    });
+    modalRoot.querySelector("[data-transfer-submit]")?.addEventListener("click", () => {
+      const email = modalRoot.querySelector("#transfer-email")?.value?.trim();
+      closeSheet();
+      showToast(email ? `Transfer link sent to ${email}` : "Enter a recipient email first", "check");
+    });
+  }
+
+  function openSellSheet(ticket, event) {
+    openSheet({
+      title: "Sell tickets",
+      subtitle: `${event.navTitle} · x${ticket.quantity}`,
+      body: `<p class="sheet-copy">List your verified resale tickets and get paid when they sell. You can change or remove your listing at any time.</p>
+        <div class="resale-preview">
+          <span>Suggested listing price</span>
+          <strong>$186 <small>each</small></strong>
+        </div>
+        <button class="btn btn-primary btn-wide" type="button" data-sell-submit>${icon("refresh")} List tickets for resale</button>
+        <p class="sheet-note">Resale is not connected in this front-end demo.</p>`,
+    });
+    modalRoot.querySelector("[data-sell-submit]")?.addEventListener("click", () => {
+      closeSheet();
+      showToast("Resale is unavailable in this demo", "refresh");
     });
   }
 
@@ -465,7 +745,7 @@
     const event = EVENTS[ticket.event];
 
     openSheet({
-      title: "Your ticket",
+      title: "Your tickets",
       subtitle: "Scan this code at the entrance",
       body: `<div class="qr-sheet">
         <div class="qr-frame">${qrSvg(ticket.id)}</div>
@@ -474,10 +754,10 @@
         <div class="seat-strip">
           <div><span>Section</span><strong>${ticket.section}</strong></div>
           <div><span>Row</span><strong>${ticket.row}</strong></div>
-          <div><span>Seat</span><strong>${ticket.seats}</strong></div>
+          <div><span>Seat</span><strong>${ticket.seatNumbers.join(" & ")}</strong></div>
         </div>
         <button class="btn btn-secondary btn-wide" type="button" data-wallet>${icon("install")} Add to Google Wallet</button>
-        <p class="sheet-note">Order ${escapeHtml(ticket.order)} · 2 mobile tickets<br>Demo artwork — this is not a valid ticket.</p>
+        <p class="sheet-note">Order #${escapeHtml(ticket.order)} · x${ticket.quantity} mobile tickets<br>Demo artwork — this is not a valid ticket.</p>
       </div>`,
     });
 
@@ -707,8 +987,24 @@
 
   /* ------------------------------ router ------------------------------ */
 
+  function clearDetailRoute() {
+    if (detailScrollHandler) {
+      view.removeEventListener("scroll", detailScrollHandler);
+      detailScrollHandler = null;
+    }
+    floatingLayer.innerHTML = "";
+    tabbar.classList.remove("hidden");
+  }
+
   function render() {
+    clearDetailRoute();
     const route = routeName();
+
+    if (route.startsWith("ticket/")) {
+      renderTicketDetail(decodeURIComponent(route.slice("ticket/".length)));
+      return;
+    }
+
     if (route === "watchlist") {
       renderImageScreen("watchlist");
     } else if (route === "tickets") {

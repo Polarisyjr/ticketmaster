@@ -1,4 +1,4 @@
-const CACHE_NAME = "ticketmaster-clone-v3";
+const CACHE_NAME = "ticketmaster-clone-v5";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -10,6 +10,7 @@ const APP_SHELL = [
   "./assets/screens/watchlist.jpg",
   "./assets/img/blippi.jpg",
   "./assets/img/lol.jpg",
+  "./assets/img/venue-map.jpg",
   "./icons/favicon.svg",
   "./icons/icon-192.png",
   "./icons/icon-512.png",
